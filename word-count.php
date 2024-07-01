@@ -14,6 +14,8 @@
  * Text Domain:       word-count
  * Domain Path:       /languages
  */
+
+
 //function register_activation_hook() {}
 //register_activation_hook(__FILE__,"wordcount_activate");
 //function register_deactivation_hook() {}
@@ -29,7 +31,26 @@ function wordcount_count_words ($content) {
 	$stripped_count = strip_tags($content);
 	$wordn = str_word_count($stripped_count);
 	$label = __('Total Number of Words ', 'word-count');
-	$content .= sprintf('<h2>%s: %s</h2>',$label,$wordn);
+	$label = apply_filters('wordcount_label', $label);
+	$tag = apply_filters('wordcount_tag', 'h2');
+	$content .= sprintf('<%s>%s: %s</%s>',$tag,$label,$wordn,$tag);
 	return $content;
 }
 add_filter('the_content','wordcount_count_words');
+function philosophy_wordcount_heading($heading) {
+//	$heading = strtoupper($heading);
+	$heading = strtoupper("Total Count");
+	return $heading;
+}
+add_filter('wordcount_tag','philosophy_wordcount_heading');
+
+function philosophy_wordcount_tag($tag) {
+//	$tag = strtoupper($tag);
+	$tag = strtoupper('h4');
+	return $tag;
+}
+add_filter('wordcount_tag','philosophy_wordcount_tag');
+
+
+
+
