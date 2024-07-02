@@ -53,4 +53,26 @@ add_filter('wordcount_tag','philosophy_wordcount_tag');
 
 
 
+function wordcount_reading_time($content) {
+	$stripped_count = strip_tags($content);
+	$wordn = str_word_count($stripped_count);
+	$reading_minutes = ceil($wordn / 200);
+	$reading_seconds = ceil($wordn % 200 / (200/60));
+	$is_visible = apply_filters('wordcount_is_visible',1);
+	if($is_visible) {
+		$label = __('Total Reading Time', 'word-count');
+		$label = apply_filters("wordcount_reading_time_label",$label);
+		$tag = apply_filters('wordcount_reading_time_tag', 'h4');
+		$content .= sprintf('<%s>%s: %s Minutes, %s seconds </%s>',$tag,$label,$reading_minutes,$reading_seconds,$tag);
+	}
+	return $content;
+}
+add_filter('the_content','wordcount_reading_time');
 
+
+function philosophy_readingtime_tag($tag) {
+//	$tag = strtoupper($tag);
+	$tag = strtoupper('h6');
+	return $tag;
+}
+add_filter('wordcount_reading_time_tag','philosophy_readingtime_tag');
